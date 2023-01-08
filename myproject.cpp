@@ -10,10 +10,18 @@ int Mode = 0;
 
 
 void addWaitTime(){
-
+  int i;
+        for(i=front; i<rear; i++) {
+            queue[i]->incrementWaiting();
+        }
     }
-class Process{
 
+    //Main class for processes
+class Process{
+int burst_time;
+    int arrival_time;
+    int priority;
+    int waitingTime;
 
 };
 
