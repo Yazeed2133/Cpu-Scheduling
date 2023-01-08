@@ -25,7 +25,7 @@ int burst_time;
 
 public:
     Process() {
-        this->burst_time=0;
+        this->burst_time=-1;
         this->arrival_time=0;
         this->priority=0;
         this->waitingTime = 0;
@@ -55,7 +55,7 @@ public:
     }
 
     void resetWatingTime(){
-        waitingTime = 0;
+        waitingTime = 1;
     }
 
     int getWaitingTime() const{
