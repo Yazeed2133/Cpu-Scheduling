@@ -40,8 +40,9 @@ int Mode = 0;
     }
     ~Queue(){
 
-        delete[] queue;
+        delete[] queue
     }
+
 };
 
 template <class T>
