@@ -23,6 +23,46 @@ int burst_time;
     int priority;
     int waitingTime;
 
+public:
+    Process() {
+        this->burst_time=0;
+        this->arrival_time=0;
+        this->priority=0;
+        this->waitingTime = 0;
+    }
+   void setBurstTime(int burstTime) {
+        burst_time = burstTime;
+    }
+
+    void setArrivalTime(int arrivalTime) {
+        arrival_time = arrivalTime;
+    }
+
+    void setPriority(int p) {
+        this->priority = p;
+    }
+
+    int getBurstTime() const {
+        return burst_time;
+    }
+
+    int getArrivalTime() const {
+        return arrival_time;
+    }
+
+    int getPriority() const {
+        return priority;
+    }
+
+    void resetWatingTime(){
+        waitingTime = 0;
+    }
+
+    int getWaitingTime() const{
+        return waitingTime;
+    }
+
+
 };
 
     void printQ(){
