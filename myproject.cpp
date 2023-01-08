@@ -106,6 +106,82 @@ public:
         }
         return false;
     }
+
+        static void insertionSort(Process **arr, int n, int mode)
+    {
+        int i, j;
+        Process key;
+        for (i = 1; i < n; i++){
+            key = *arr[i];
+            j = i - 1;
+
+
+            while (j >= 0 && Compare(*arr[j],key,mode)){
+
+                *arr[j + 1] = *arr[j];
+                j = j - 1;
+            }
+            *arr[j + 1] = key;
+        }
+    }
+
+    int getSumBurstTime(){
+        int sum = 0, i;
+        for(i=0; i<process_no; i++){
+            sum += processes[i]->getBurstTime();
+        }
+        return sum;
+    }
+
+    int getMaxArrivalTime(){
+        int max = 0, i;
+        for(i=0; i<process_no; i++){
+            if(max < processes[i]->getArrivalTime())
+                max = processes[i]->getArrivalTime();
+        }
+        return max;
+    }
+
+    int getArivingProcesses(int arr){
+        int i;
+        for(i=0; i<process_no && processes[i]->getArrivalTime() <= arr; i++);
+        return i-1;
+    }
+
+    void resetWaitingTime(){
+        int i;
+        for(i=0; i<process_no; i++)
+            processes[i]->resetWatingTime();
+    }
+
+    void FCFS(ostream& out){
+        Queue<Process*> q;
+        Process* p = nullptr;
+        int i, maxCounter, index, j, burst = 0, start = 0;
+
+        resetWaitingTime();
+        insertionSort(processes,process_no,2);
+        maxCounter = getMaxArrivalTime() + getSumBurstTime();
+
+        for(i=0; i<maxCounter; i++){
+            index = getArivingProcesses(i);
+
+            if(index >= start) {
+                for (j = start; j <= index; j++)
+                    q.enqueue(processes[j], processes[j]->getArrivalTime());
+                start = index + 1;
+            }
+
+            if(p == nullptr || p->getBurstTime() == burst) {
+                p = q.dequeue();
+                burst = 0;
+            }
+            q.addWaitTime();
+            burst++;
+        }
+        Print_FCFS_waiting_time(out);
+    }
+
 };
 
     void printQ(){
