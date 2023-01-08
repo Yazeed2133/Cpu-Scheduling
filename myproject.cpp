@@ -1,9 +1,72 @@
-
 #include <iostream>
 #include <fstream>
 #include <cstring>
 
 using namespace std;
+
+int Scheduler_Simulator(int scheduling_method, int mode);
+int Scheduler = 0;
+int Mode = 0;
+
+template <class T>
+class Queue{
+    T* queue;
+    int* priority;
+    int size;
+    int front, rear;
+
+    void resize(){
+        T* tempQ = new T[size*2];
+        int* tempP = new int[size*2];
+        for(int i=0; i<size; i++) {
+            tempQ[i] = queue[i];
+            tempP[i] = priority[i];
+        }
+        delete[] priority;
+        delete[] queue;
+        priority = tempP;
+        queue = tempQ;
+        size = size*2;
+    }
+public:
+    Queue(int s=50)
+    {
+        this->size = s;
+        queue = new T[size];
+        priority = new int[size];
+        front = 0;
+        rear = 0;
+    }
+
+    bool isFull()
+    {
+        return (rear == size - 1);
+    }
+
+    bool isEmpty()
+    {
+        return (front == 0 && rear == 0);
+    }
+
+    void enqueue( T element, int p )
+    {
+        if( isFull() )
+            resize();
+
+        int i;
+        for(i=front; i != rear && p >= priority[i]; i++ );
+
+        for(int j = rear; j > i; j--) {
+            queue[j] = queue[j - 1];
+            priority[j] = priority[j-1];
+        }
+
+        queue[i] = element;
+        priority[i] = p;
+        rear++;
+    }
+
+
 int main(int argc, char* args[]) {
     fstream input, output;
     char filename[100];
