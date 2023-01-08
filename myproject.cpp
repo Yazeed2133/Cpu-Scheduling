@@ -85,7 +85,14 @@ public:
         processes = new Process*[size];
         process_no = 0;
     }
+    void Add_Process(int b, int a, int p){
+        Process *process;
+        process = new Process;
+        process->setBurstTime(b);
+        process->setArrivalTime(a);
+        process->setPriority(p);
 
+    }
 };
 
     void printQ(){
