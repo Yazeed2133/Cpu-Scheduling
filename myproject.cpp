@@ -8,6 +8,15 @@ int Scheduler_Simulator(int scheduling_method, int mode);
 int Scheduler = 0;
 int Mode = 0;
 
+
+void addWaitTime(){
+
+    }
+class Process{
+
+
+};
+
     void printQ(){
         for(int i = front; i < rear; i++)
             cout << *queue[i];
