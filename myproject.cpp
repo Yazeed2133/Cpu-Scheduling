@@ -39,8 +39,8 @@ int Mode = 0;
         return nullptr;
     }
     ~Queue(){
-
-        delete[] queue
+        delete[] priority;
+        delete[] queue;
     }
 
 };
