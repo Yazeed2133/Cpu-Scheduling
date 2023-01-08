@@ -91,7 +91,20 @@ public:
         process->setBurstTime(b);
         process->setArrivalTime(a);
         process->setPriority(p);
+        processes[process_no++] = process;
 
+    }
+     static bool Compare(Process p1, Process p2, int mode){
+        if(mode == 1) {
+            if (p1.getBurstTime() > p2.getBurstTime())
+                return true;
+        }
+
+        else if(mode == 2){
+            if (p1.getArrivalTime() > p2.getArrivalTime())
+                return true;
+        }
+        return false;
     }
 };
 
