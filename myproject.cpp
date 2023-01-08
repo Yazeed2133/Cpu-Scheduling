@@ -182,6 +182,18 @@ public:
         Print_FCFS_waiting_time(out);
     }
 
+    void Print_FCFS_waiting_time(ostream& out){
+        int sum=0, wait;
+        out << "Scheduling Method: First Come First Served\n";
+        out << "Process Waiting Times:\n";
+        for(int i=0;i<process_no;i++){
+            wait = processes[i]->getWaitingTime();
+            out << "P" << i+1 << ": " << wait << " ms\n";
+            sum = sum+wait;
+        }
+        out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
+    }
+
 };
 
     void printQ(){
