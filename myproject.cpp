@@ -8,6 +8,28 @@ int Scheduler_Simulator(int scheduling_method, int mode);
 int Scheduler = 0;
 int Mode = 0;
 
+    void printQ(){
+        for(int i = front; i < rear; i++)
+            cout << *queue[i];
+        system("pause");
+    }
+
+    T dequeue()
+    {
+        if( !isEmpty() )
+        {
+            T e = queue[front];
+            front++;
+            if( front == rear )
+            {
+                front = 0;
+                rear = 0;
+            }
+            return e;
+        }
+        return NULL;
+    }
+
 template <class T>
 class Queue{
     T* queue;
