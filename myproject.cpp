@@ -29,6 +29,20 @@ int Mode = 0;
         }
         return NULL;
     }
+    T See_First()
+    {
+        if( !isEmpty() )
+        {
+            T e = queue[front];
+            return e;
+        }
+        return nullptr;
+    }
+    ~Queue(){
+
+        delete[] queue;
+    }
+};
 
 template <class T>
 class Queue{
