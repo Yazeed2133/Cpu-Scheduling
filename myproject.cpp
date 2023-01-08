@@ -62,6 +62,16 @@ public:
         return waitingTime;
     }
 
+        void incrementWaiting(){
+        this->waitingTime++;
+    }
+
+
+        void decrementWaiting(){
+        this->waitingTime--;
+    }
+
+
 
 };
 
