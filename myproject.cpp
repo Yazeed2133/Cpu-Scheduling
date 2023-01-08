@@ -67,11 +67,24 @@ public:
     }
 
 
-        void decrementWaiting(){
+     /*   void decrementWaiting(){
         this->waitingTime--;
+    }*/
+    friend ostream& operator << (ostream& out, Process& p){
+        out << p.burst_time << ',' << p.arrival_time << ',' << p.priority << " W: " << p.waitingTime <<  endl;
+        return out;
     }
+};
 
+class CPU_Sheduler{
+  Process **processes;
+    int process_no;
 
+public:
+    explicit CPU_Sheduler(int size){
+        processes = new Process*[size];
+        process_no = 0;
+    }
 
 };
 
