@@ -193,5 +193,8 @@ int main(int argc, char* args[]) {
         }
     }while(option!=4);
 
+    scheduler->FCFS(cout);
+    scheduler->FCFS(output);
+
     return 0;
     }
