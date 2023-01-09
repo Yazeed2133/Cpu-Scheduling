@@ -604,7 +604,7 @@ int main(int argc, char* args[]) {
     }while(option!=4);
 
 
-     scheduler->SJF(false, cout);
+    scheduler->SJF(false, cout);
     scheduler->SJF(false, output);
     scheduler->SJF(true, cout);
     scheduler->SJF(true, output);
@@ -614,6 +614,8 @@ int main(int argc, char* args[]) {
     scheduler->PS(false, cout);
     scheduler->PS(false, output);
 
+    scheduler->RRS(output, cout);
+    scheduler->RRS(quantum, output);
 
     return 0;
     }
