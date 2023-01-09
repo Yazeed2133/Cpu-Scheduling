@@ -4,7 +4,12 @@
 
 using namespace std;
 
-int Scheduler_Simulator(int scheduling_method, int mode);
+int Scheduler_Simulator(int scheduling_method, int mode){
+
+
+
+
+}
 int Scheduler = 0;
 int Mode = 0;
 
@@ -614,8 +619,13 @@ int main(int argc, char* args[]) {
     scheduler->PS(false, cout);
     scheduler->PS(false, output);
 
-    scheduler->RRS(output, cout);
+
+    scheduler->RRS(quantum, cout);
     scheduler->RRS(quantum, output);
+
+    output.close();
+
+    delete scheduler;;
 
     return 0;
     }
