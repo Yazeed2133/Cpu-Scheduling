@@ -194,7 +194,192 @@ public:
         out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
     }
 
+
+    void SJF(bool isPreemptive, ostream& out){
+        Queue<Process*> q;
+        Process* p = nullptr;
+        int i, maxCounter, index, j, start = 0;
+        int burstBackup[process_no];
+
+        for(i=0; i<process_no; i++)
+            burstBackup[i] = processes[i]->getBurstTime();
+
+        resetWaitingTime();
+        insertionSort(processes,process_no,2);
+        maxCounter = getMaxArrivalTime() + getSumBurstTime();
+
+        for(i=0; i<maxCounter; i++){
+            index = getArivingProcesses(i);
+
+            if(p != nullptr){
+                p->setBurstTime(p->getBurstTime()-1);
+                if(isPreemptive  && p->getBurstTime() != 0) {
+                    q.enqueue(p, p->getBurstTime());
+                }
+            }
+
+            if(index >= start) {
+                for (j = start; j <= index; j++)
+                    q.enqueue(processes[j], processes[j]->getBurstTime());
+                start = index + 1;
+            }
+
+            if(p == nullptr || p->getBurstTime() == 0 || isPreemptive) {
+                p = q.dequeue();
+            }
+
+            q.addWaitTime();
+        }
+
+        for(i=0; i<process_no; i++)
+            processes[i]->setBurstTime(burstBackup[i]);
+
+        Print_SJF_waiting_time(isPreemptive, out);
+    }
+
+    void Print_SJF_waiting_time(bool isPreemptive, ostream& out){
+        int sum=0, wait;
+        out << "Scheduling Method: Shortest Job First ";
+        if(isPreemptive)
+            out << "- Preemptive\n";
+        else
+            out << "- Non-Preemptive\n";
+        out << "Process Waiting Times:\n";
+        for(int i=0;i<process_no;i++){
+            wait = processes[i]->getWaitingTime();
+            out << "P" << i+1 << ": " << wait << " ms\n";
+            sum = sum+wait;
+        }
+        out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
+    }
+
+    void PS(bool isPreemptive, ostream& out){
+        Queue<Process*> q;
+        Process* p = nullptr, *p1;
+        int i, maxCounter, index, j, start = 0;
+        int burstBackup[process_no];
+
+        for(i=0; i<process_no; i++)
+            burstBackup[i] = processes[i]->getBurstTime();
+
+        resetWaitingTime();
+        insertionSort(processes,process_no,2);
+        maxCounter = getMaxArrivalTime() + getSumBurstTime();
+
+        for(i=0; i<maxCounter; i++){
+            index = getArivingProcesses(i);
+
+            if(p != nullptr){
+                p->setBurstTime(p->getBurstTime()-1);
+            }
+
+            if(index >= start) {
+                for (j = start; j <= index; j++)
+                    q.enqueue(processes[j], processes[j]->getPriority());
+                start = index + 1;
+            }
+
+            if(p == nullptr || p->getBurstTime() == 0) {
+                p = q.dequeue();
+            }
+
+            if(isPreemptive) {
+                p1 = q.See_First();
+                if (p1 != nullptr && p1->getPriority() < p->getPriority()) {
+                    q.enqueue(p, p->getPriority());
+                    p = q.dequeue();
+                }
+            }
+            q.addWaitTime();
+        }
+
+        for(i=0; i<process_no; i++)
+            processes[i]->setBurstTime(burstBackup[i]);
+
+        Print_PS_waiting_time(isPreemptive, out);
+    }
+
+    void Print_PS_waiting_time(bool isPreemptive, ostream& out){
+        int sum=0, wait;
+        out << "Scheduling Method: Priority Scheduling ";
+        if(isPreemptive)
+            out << "- Preemptive\n";
+        else
+            out << "- Non-Preemptive\n";
+        out << "Process Waiting Times:\n";
+        for(int i=0;i<process_no;i++){
+            wait = processes[i]->getWaitingTime();
+            out << "P" << i+1 << ": " << wait << " ms\n";
+            sum = sum+wait;
+        }
+        out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
+    }
+
+    void RRS(int quantum, ostream& out){
+        Queue<Process*> q;
+        Process* p = nullptr;
+        int i, maxCounter, index, j, start = 0, counter = 0, priority = 1;
+        int burstBackup[process_no];
+
+        for(i=0; i<process_no; i++)
+            burstBackup[i] = processes[i]->getBurstTime();
+
+        resetWaitingTime();
+        insertionSort(processes,process_no,2);
+        maxCounter = getMaxArrivalTime() + getSumBurstTime();
+
+        for(i=0; i<maxCounter; i++){
+            index = getArivingProcesses(i);
+
+            if(index >= start) {
+                for (j = start; j <= index; j++)
+                    q.enqueue(processes[j], priority++);
+                start = index + 1;
+            }
+
+            if(p != nullptr){
+                p->setBurstTime(p->getBurstTime()-1);
+                if(counter == quantum && p->getBurstTime() != 0) {
+                    q.enqueue(p, process_no+priority++);
+                }
+            }
+
+            if(p == nullptr || p->getBurstTime() == 0 || counter == quantum) {
+                p = q.dequeue();
+                counter = 0;
+            }
+
+            q.addWaitTime();
+            counter++;
+        }
+
+        for(i=0; i<process_no; i++)
+            processes[i]->setBurstTime(burstBackup[i]);
+
+        Print_RRS_waiting_time(quantum, out);
+    }
+
+    void Print_RRS_waiting_time(int quantum, ostream& out){
+        int sum=0, wait;
+        out << "Scheduling Method: Round Robin Scheduling - time_quantum=" << quantum << endl;
+        out << "Process Waiting Times:\n";
+        for(int i=0;i<process_no;i++){
+            wait = processes[i]->getWaitingTime();
+            out << "P" << i+1 << ": " << wait << " ms\n";
+            sum = sum+wait;
+        }
+        out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
+    }
+
+    ~CPU_Sheduler(){
+        int i;
+        for(i=0; i<process_no; i++)
+            delete processes[i];
+        delete[] processes;
+    }
 };
+
+
 
     void printQ(){
         for(int i = front; i < rear; i++)
