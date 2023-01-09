@@ -602,6 +602,10 @@ int main(int argc, char* args[]) {
             }
         }
     }while(option!=4);
+    scheduler->SJF(false, cout);
+    scheduler->SJF(false, output);
+    scheduler->SJF(false, cout);
+    scheduler->SJF(false, output);
 
     scheduler->FCFS(cout);
     scheduler->FCFS(output);
