@@ -602,13 +602,18 @@ int main(int argc, char* args[]) {
             }
         }
     }while(option!=4);
-    scheduler->SJF(false, cout);
-    scheduler->SJF(false, output);
-    scheduler->SJF(false, cout);
-    scheduler->SJF(false, output);
 
-    scheduler->FCFS(cout);
-    scheduler->FCFS(output);
+
+     scheduler->SJF(false, cout);
+    scheduler->SJF(false, output);
+    scheduler->SJF(true, cout);
+    scheduler->SJF(true, output);
+
+    scheduler->PS(true, cout);
+    scheduler->PS(true, output);
+    scheduler->PS(false, cout);
+    scheduler->PS(false, output);
+
 
     return 0;
     }
