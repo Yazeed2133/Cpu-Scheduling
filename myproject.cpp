@@ -4,43 +4,7 @@
 
 using namespace std;
 
-int Scheduler_Simulator(int scheduling_method, int mode){
-    string Method="None";
-    string Mode="Off";
-    if(scheduling_method==2)
-        Method = "First Come, First Served Scheduling";
-    else if(scheduling_method==3)
-        Method = "Shortest-Job-First Scheduling";
-    else if(scheduling_method == 4)
-        Method = "Priority Scheduling";
-    else if(scheduling_method == 5)
-        Method = "Round-Robin Scheduling";
-
-    if(mode == 1)
-        Mode = "ON";
-    else
-        Mode = "OFF";
-
-    int option;
-    do{
-        cout << "\n\t\t\tCPU Scheduler Simulator\n";
-        cout << "1) Scheduling Method(" << Method << ")\n";
-        cout << "2) Preemptive Mode (" << Mode << ")\n";
-        cout << "3) Show Result\n";
-        cout << "4) End Program\n";
-        cout << "Option > ";
-        cin >> option;
-        if (cin.fail() || option < 1 || option > 4) { //fail flag will be set when we give input other than integer.
-            cin.clear(); //clears buffer
-            cin.ignore(); //ignore input
-            cout << "\nInvalid Input :(\n";
-        }
-        else
-            break;
-    }while(option < 1 || option > 4);
-    return option;
-
-}
+int Scheduler_Simulator(int scheduling_method, int mode);
 
 int Scheduler = 0;
 int Mode = 0;
@@ -661,3 +625,42 @@ int main(int argc, char* args[]) {
 
     return 0;
     }
+
+int Scheduler_Simulator(int scheduling_method, int mode){
+    string Method="None";
+    string Mode="Off";
+    if(scheduling_method==2)
+        Method = "First Come, First Served Scheduling";
+    else if(scheduling_method==3)
+        Method = "Shortest-Job-First Scheduling";
+    else if(scheduling_method == 4)
+        Method = "Priority Scheduling";
+    else if(scheduling_method == 5)
+        Method = "Round-Robin Scheduling";
+
+    if(mode == 1)
+        Mode = "ON";
+    else
+        Mode = "OFF";
+
+    int option;
+    do{
+        cout << "\n\t\t\tCPU Scheduler Simulator\n";
+        cout << "1) Scheduling Method(" << Method << ")\n";
+        cout << "2) Preemptive Mode (" << Mode << ")\n";
+        cout << "3) Show Result\n";
+        cout << "4) End Program\n";
+        cout << "Option > ";
+        cin >> option;
+        if (cin.fail() || option < 1 || option > 4) { //fail flag will be set when we give input other than integer.
+            cin.clear(); //clears buffer
+            cin.ignore(); //ignore input
+            cout << "\nInvalid Input :(\n";
+        }
+        else
+            break;
+    }while(option < 1 || option > 4);
+    return option;
+
+}
+
