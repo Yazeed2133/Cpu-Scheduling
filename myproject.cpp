@@ -5,21 +5,113 @@
 using namespace std;
 
 int Scheduler_Simulator(int scheduling_method, int mode);
-
 int Scheduler = 0;
 int Mode = 0;
 
+template <class T>
+class Queue{
+    T* queue;
+    int* priority;
+    int size;
+    int front, rear;
 
-void addWaitTime(){
-  int i;
+    void resize(){
+        T* tempQ = new T[size*2];
+        int* tempP = new int[size*2];
+        for(int i=0; i<size; i++) {
+            tempQ[i] = queue[i];
+            tempP[i] = priority[i];
+        }
+        delete[] priority;
+        delete[] queue;
+        priority = tempP;
+        queue = tempQ;
+        size = size*2;
+    }
+public:
+    Queue(int s=50)
+    {
+        this->size = s;
+        queue = new T[size];
+        priority = new int[size];
+        front = 0;
+        rear = 0;
+    }
+
+    bool isFull()
+    {
+        return (rear == size - 1);
+    }
+
+    bool isEmpty()
+    {
+        return (front == 0 && rear == 0);
+    }
+
+    void enqueue( T element, int p )
+    {
+        if( isFull() )
+            resize();
+
+        int i;
+        for(i=front; i != rear && p >= priority[i]; i++ );
+
+        for(int j = rear; j > i; j--) {
+            queue[j] = queue[j - 1];
+            priority[j] = priority[j-1];
+        }
+
+        queue[i] = element;
+        priority[i] = p;
+        rear++;
+    }
+
+    void addWaitTime(){
+        int i;
         for(i=front; i<rear; i++) {
             queue[i]->incrementWaiting();
         }
     }
 
-    //Main class for processes
+    void printQ(){
+        for(int i = front; i < rear; i++)
+            cout << *queue[i];
+        system("pause");
+    }
+
+    T dequeue()
+    {
+        if( !isEmpty() )
+        {
+            T e = queue[front];
+            front++;
+            if( front == rear )
+            {
+                front = 0;
+                rear = 0;
+            }
+            return e;
+        }
+        return NULL;
+    }
+
+    T See_First()
+    {
+        if( !isEmpty() )
+        {
+            T e = queue[front];
+            return e;
+        }
+        return nullptr;
+    }
+    ~Queue(){
+        delete[] priority;
+        delete[] queue;
+    }
+};
+
 class Process{
-int burst_time;
+    int burst_time;
     int arrival_time;
     int priority;
     int waitingTime;
@@ -31,7 +123,8 @@ public:
         this->priority=0;
         this->waitingTime = 0;
     }
-   void setBurstTime(int burstTime) {
+
+    void setBurstTime(int burstTime) {
         burst_time = burstTime;
     }
 
@@ -63,14 +156,10 @@ public:
         return waitingTime;
     }
 
-        void incrementWaiting(){
+    void incrementWaiting(){
         this->waitingTime++;
     }
 
-
-     /*   void decrementWaiting(){
-        this->waitingTime--;
-    }*/
     friend ostream& operator << (ostream& out, Process& p){
         out << p.burst_time << ',' << p.arrival_time << ',' << p.priority << " W: " << p.waitingTime <<  endl;
         return out;
@@ -78,7 +167,7 @@ public:
 };
 
 class CPU_Sheduler{
-  Process **processes;
+    Process **processes;
     int process_no;
 
 public:
@@ -86,6 +175,7 @@ public:
         processes = new Process*[size];
         process_no = 0;
     }
+
     void Add_Process(int b, int a, int p){
         Process *process;
         process = new Process;
@@ -93,9 +183,9 @@ public:
         process->setArrivalTime(a);
         process->setPriority(p);
         processes[process_no++] = process;
-
     }
-     static bool Compare(Process p1, Process p2, int mode){
+
+    static bool Compare(Process p1, Process p2, int mode){
         if(mode == 1) {
             if (p1.getBurstTime() > p2.getBurstTime())
                 return true;
@@ -108,7 +198,7 @@ public:
         return false;
     }
 
-        static void insertionSort(Process **arr, int n, int mode)
+    static void insertionSort(Process **arr, int n, int mode)
     {
         int i, j;
         Process key;
@@ -116,8 +206,14 @@ public:
             key = *arr[i];
             j = i - 1;
 
-
+            // Move elements of arr[0..i-1],
+            // that are greater than key, to one
+            // position ahead of their
+            // current position
             while (j >= 0 && Compare(*arr[j],key,mode)){
+                //mode will tell what data member is to be comapred
+                //in case of mode = 1, compare burst time
+                //in case of mode = 2, compare arrival time
 
                 *arr[j + 1] = *arr[j];
                 j = j - 1;
@@ -194,7 +290,6 @@ public:
         }
         out << "Average Waiting Time: " << sum/(process_no*1.0) << " ms\n";
     }
-
 
     void SJF(bool isPreemptive, ostream& out){
         Queue<Process*> q;
@@ -381,103 +476,6 @@ public:
 };
 
 
-
-    void printQ(){
-        for(int i = front; i < rear; i++)
-            cout << *queue[i];
-        system("pause");
-    }
-
-    T dequeue()
-    {
-        if( !isEmpty() )
-        {
-            T e = queue[front];
-            front++;
-            if( front == rear )
-            {
-                front = 0;
-                rear = 0;
-            }
-            return e;
-        }
-        return NULL;
-    }
-    T See_First()
-    {
-        if( !isEmpty() )
-        {
-            T e = queue[front];
-            return e;
-        }
-        return nullptr;
-    }
-    ~Queue(){
-        delete[] priority;
-        delete[] queue;
-    }
-
-};
-
-template <class T>
-class Queue{
-    T* queue;
-    int* priority;
-    int size;
-    int front, rear;
-
-    void resize(){
-        T* tempQ = new T[size*2];
-        int* tempP = new int[size*2];
-        for(int i=0; i<size; i++) {
-            tempQ[i] = queue[i];
-            tempP[i] = priority[i];
-        }
-        delete[] priority;
-        delete[] queue;
-        priority = tempP;
-        queue = tempQ;
-        size = size*2;
-    }
-public:
-    Queue(int s=50)
-    {
-        this->size = s;
-        queue = new T[size];
-        priority = new int[size];
-        front = 0;
-        rear = 0;
-    }
-
-    bool isFull()
-    {
-        return (rear == size - 1);
-    }
-
-    bool isEmpty()
-    {
-        return (front == 0 && rear == 0);
-    }
-
-    void enqueue( T element, int p )
-    {
-        if( isFull() )
-            resize();
-
-        int i;
-        for(i=front; i != rear && p >= priority[i]; i++ );
-
-        for(int j = rear; j > i; j--) {
-            queue[j] = queue[j - 1];
-            priority[j] = priority[j-1];
-        }
-
-        queue[i] = element;
-        priority[i] = p;
-        rear++;
-    }
-
-
 int main(int argc, char* args[]) {
     fstream input, output;
     char filename[100];
@@ -604,6 +602,8 @@ int main(int argc, char* args[]) {
         }
     }while(option!=4);
 
+    scheduler->FCFS(cout);
+    scheduler->FCFS(output);
 
     scheduler->SJF(false, cout);
     scheduler->SJF(false, output);
@@ -615,18 +615,16 @@ int main(int argc, char* args[]) {
     scheduler->PS(false, cout);
     scheduler->PS(false, output);
 
-
     scheduler->RRS(quantum, cout);
     scheduler->RRS(quantum, output);
 
     output.close();
 
-    delete scheduler;;
+    delete scheduler;
 
     return 0;
-    }
-
-int Scheduler_Simulator(int scheduling_method, int mode){
+}
+int Scheduler_Simulator(int scheduling_method, int mode){ //Assigns particular sheduler and shows if mode is on or off
     string Method="None";
     string Mode="Off";
     if(scheduling_method==2)
@@ -661,6 +659,8 @@ int Scheduler_Simulator(int scheduling_method, int mode){
             break;
     }while(option < 1 || option > 4);
     return option;
+
+
 
 }
 
